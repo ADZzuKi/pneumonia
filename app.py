@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 from flask import Flask, render_template, request
@@ -14,10 +14,6 @@ import numpy as np
 
 app = Flask(__name__)
 
-
-# In[2]:
-
-
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
@@ -25,10 +21,10 @@ def upload_file():
         print("File Received")
         filename = secure_filename(file.filename)
         print(filename)
-        file.save(filename) #Heroku no need static
-        file = open(filename,"r") #Heroku no need static
+        file.save("./static/"+filename) #Heroku no need static
+        file = open("./static/"+filename,"r") #Heroku no need static
         model = load_model("Pneumonia")
-        image = cv2.imread(filename)
+        image = cv2.imread("./static/"+filename)
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         img = cv2.merge([gray,gray,gray])
         img.resize((150,150,3))
@@ -38,19 +34,8 @@ def upload_file():
         return(render_template("index.html", result=str(pred)))
     else:
         return(render_template("index.html", result="WAITING"))
-
-
-# In[ ]:
-
-
 if __name__ == "__main__":
     app.run()
-
-
-# In[ ]:
-
-
-
 
 
 # In[ ]:
